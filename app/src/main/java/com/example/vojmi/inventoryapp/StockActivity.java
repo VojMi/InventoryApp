@@ -173,6 +173,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
 
 
     }
+
 }
 
 

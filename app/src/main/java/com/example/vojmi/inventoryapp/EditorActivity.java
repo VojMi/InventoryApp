@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -82,7 +83,24 @@ public class EditorActivity extends AppCompatActivity implements
         mQuantityEditText = findViewById(R.id.edit_product_quantity);
         mSupplierEditText = findViewById(R.id.edit_supplier);
         mPhoneEditText = findViewById(R.id.edit_phone);
+
+        // Setup onClickListener to call supplier when button is clicked.
+        findViewById(R.id.order).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText phoneEditText = findViewById(R.id.edit_phone);
+                String phone = phoneEditText.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.no_phone, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
+
 
     /**
      * Get the values from EditTexts and put them into database.

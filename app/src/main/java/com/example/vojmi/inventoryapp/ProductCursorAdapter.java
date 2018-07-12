@@ -61,5 +61,6 @@ public class ProductCursorAdapter extends CursorAdapter {
                 stockActivity.addProduct(id, quantity);
             }
         });
+
     }
 }

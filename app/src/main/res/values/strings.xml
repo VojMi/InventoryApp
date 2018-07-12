@@ -34,8 +34,10 @@
     <string name="added">Product added!</string>
     <string name="add_failed">Failed to add!</string>
     <string name="product_name">Product name:</string>
-    <string name="product_price">Procut price:</string>
+    <string name="product_price">Product price:</string>
     <string name="product_quantity">Product quantity:</string>
     <string name="supplier_name">Supplier name:</string>
     <string name="supplier_phone">Phone number:</string>
+    <string name="no_phone">Unable to call supplier!</string>
+    <string name="order">Order</string>
 </resources>
