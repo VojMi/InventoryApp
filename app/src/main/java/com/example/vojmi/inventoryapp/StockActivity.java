@@ -1,50 +1,102 @@
 package com.example.vojmi.inventoryapp;
 
+import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.vojmi.inventoryapp.data.ProductContract.ProductEntry;
-import com.example.vojmi.inventoryapp.data.ProductDbHelper;
 
-/**
- * Displays list of items in stock, stored in the database.
- */
-public class StockActivity extends AppCompatActivity {
+public class StockActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
     /**
-     * Database helper providing access to the database.
-     */
-    private ProductDbHelper mDbHelper;
+     * Identifier for the data loader.
+     **/
+    private static final int PRODUCT_LOADER = 0;
+    ProductCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock);
 
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper.
-        // The context is current activity.
-        mDbHelper = new ProductDbHelper(this);
+        // Find the ListView to be filled with the product data.
+        ListView productListView = findViewById(R.id.list);
+
+        // Find and set empty view on the ListView which only shows when the list has no items.
+        View emptyView = findViewById(R.id.empty_view);
+        productListView.setEmptyView(emptyView);
+
+        // Prepare an Adapter to create a list item for each row of the product, all via Cursor.
+        mCursorAdapter = new ProductCursorAdapter(this, null);
+        productListView.setAdapter(mCursorAdapter);
+
+        // Set the listener.
+        productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // Create new intent.
+                Intent intent = new Intent(StockActivity.this, com.example.vojmi.inventoryapp.EditorActivity.class);
+
+                // Declare the content URI that represents the particular product.
+                Uri currentProductUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+                intent.setData(currentProductUri);
+                startActivity(intent);
+            }
+        });
+        getLoaderManager().initLoader(PRODUCT_LOADER, null, this);
+
+    }
+
+
+    /**
+     * Helper method to delete all items from database. .
+     */
+    private void deleteAllProducts() {
+        int rowsDeleted = getContentResolver().delete(ProductEntry.CONTENT_URI, null, null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from product database");
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        displayDatabaseInfo();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // This adds menu items to the app bar.
+        getMenuInflater().inflate(R.menu.menu_stock, menu);
+        return true;
     }
 
-    /**
-     * The helper method displays the database content via TextView in our layout.
-     */
-    private void displayDatabaseInfo() {
-        // Getting and access to the database.
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to a click on the "New product" menu option.
+            case R.id.new_product:
+                Intent intent = new Intent(StockActivity.this, com.example.vojmi.inventoryapp.EditorActivity.class);
+                startActivity(intent);
+                return true;
+            // Respond to a click on the "Delete all entries" menu option.
+            case R.id.action_delete_all_entries:
+                deleteAllProducts();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        // Specification of columns to be accessed.
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        // Define a projection that specifies the columns from the table we care about.
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
@@ -53,96 +105,77 @@ public class StockActivity extends AppCompatActivity {
                 ProductEntry.COLUMN_SUPPLIER_NAME,
                 ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER};
 
-        // Proceeding the query on products table.
-        Cursor cursor = db.query(
-                ProductEntry.TABLE_NAME,
-                projection,
-                null,
-                null,
+        // This loader will execute the ContentProvider method on a background thread.
+        // It is generally recommended to use background thread to make slower operations.
+        return new CursorLoader(this,   // Parent activity context.
+                ProductEntry.CONTENT_URI,   // Provider content URI to query.
+                projection,             // Columns to include in the resulting Cursor.
                 null,
                 null,
                 null);
+    }
 
-        TextView displayView = findViewById(R.id.text_view_product);
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Update Cursor Adapter with this new cursor containing updated product data.
+        mCursorAdapter.swapCursor(data);
+    }
 
-        try {
-            // Create a header of database in the Text View.
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // This callback is called when any data will be deleted.
+        mCursorAdapter.swapCursor(null);
+    }
 
-            displayView.setText(ProductEntry._ID + " | " +
-                    ProductEntry.COLUMN_PRODUCT_NAME + " | " +
-                    ProductEntry.COLUMN_PRODUCT_PRICE + " | " +
-                    ProductEntry.COLUMN_PRODUCT_QUANTITY + " | " +
-                    ProductEntry.COLUMN_SUPPLIER_NAME + " | " +
-                    ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER + "\n");
+    public void saleProduct(long productId, int quantity) {
 
-
-            // Getting the index of each column.
-            int idColumnIndex = cursor.getColumnIndex(ProductEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
-            int priceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
-            int supplierColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_NAME);
-            int phoneColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
-
-            // Move through all the given rows by the cursor.
-            while (cursor.moveToNext()) {
-                // Getting the value according to given column index.
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentName = cursor.getString(nameColumnIndex);
-                String currentPrice = cursor.getString(priceColumnIndex);
-                int currentQuantity = cursor.getInt(quantityColumnIndex);
-                int currentSupplier = cursor.getInt(supplierColumnIndex);
-                int currentPhone = cursor.getInt(phoneColumnIndex);
-                // Display the values from each column of the current row via TextView.
-                displayView.append(("\n" + currentID + " | " +
-                        currentName + " | " +
-                        currentPrice + "$ | " +
-                        currentQuantity + " | " +
-                        currentSupplier + " | " +
-                        currentPhone));
+        // Decrement of product quantity.
+        if (quantity >= 1) {
+            quantity--;
+            // Construct new uri and content values.
+            Uri updateUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, productId);
+            ContentValues values = new ContentValues();
+            values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+            int rowsUpdated = getContentResolver().update(
+                    updateUri,
+                    values,
+                    null,
+                    null);
+            if (rowsUpdated == 1) {
+                Toast.makeText(this, R.string.sale_ok, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.sale_failed, Toast.LENGTH_SHORT).show();
             }
-        } finally {
-            // Cursor should be closed when not used (probably for resource saving purposes).
-            cursor.close();
+
+        } else {
+            //  Out of stock
+            Toast.makeText(this, R.string.out_of_stock, Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * Method for inserting testing data into database - for testing purposes only.
-     */
-    private void insertProduct() {
-        // Getting access to the database.
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        // Specification of column names are the appropriate keys,
+    public void addProduct(long productId, int quantity) {
+        // Increment of product quantity.
+        quantity++;
+        // Construct new uri and content values.
+        Uri updateUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, productId);
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Headphones");
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 48.8);
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 25);
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Kossos");
-        values.put(ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER, "777112567");
-
-        // Insert specified data.
-        long newRowId = db.insert(ProductEntry.TABLE_NAME, null, values);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu and displays the icon on the app bar.
-        getMenuInflater().inflate(R.menu.menu_stock, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Perform action when the item is selected.
-        switch (item.getItemId()) {
-            // Call method inserting the test data into database.
-            case R.id.action_insert_test_data:
-                insertProduct();
-                displayDatabaseInfo();
-                return true;
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+        int rowsUpdated = getContentResolver().update(
+                updateUri,
+                values,
+                null,
+                null);
+        if (rowsUpdated == 1) {
+            Toast.makeText(this, R.string.added, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.add_failed, Toast.LENGTH_SHORT).show();
         }
-        return super.onOptionsItemSelected(item);
+
+
     }
 }
+
+
+
+
+

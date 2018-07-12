@@ -4,12 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+
 /**
  * Database helper for Inventory App which manages database creation and version management.
  */
 public class ProductDbHelper extends SQLiteOpenHelper {
     /**
-     * Name of the database file
+     * Name of the database file.
      */
     private static final String DATABASE_NAME = "stock.db";
 
