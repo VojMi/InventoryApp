@@ -20,20 +20,23 @@
 
         <TextView
             android:id="@+id/empty_title_text"
+            android:layout_margin="@dimen/padding_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/title"
             android:layout_centerHorizontal="true"
             android:paddingTop="16dp"
-            android:textAppearance="?android:textAppearanceMedium" />
+            android:textAppearance="?android:textAppearanceLarge" />
 
         <TextView
             android:id="@+id/empty_subtitle_text"
             android:layout_width="wrap_content"
+            android:layout_margin="@dimen/padding_small"
             android:layout_height="wrap_content"
             android:layout_below="@+id/empty_title_text"
             android:layout_centerHorizontal="true"
-            android:paddingTop="8dp"
-            android:textAppearance="?android:textAppearanceSmall"
+            android:text="@string/instructions"
+            android:textAppearance="?android:textAppearanceMedium"
             android:textColor="#A2AAB0" />
     </RelativeLayout>
 

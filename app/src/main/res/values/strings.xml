@@ -40,4 +40,6 @@
     <string name="supplier_phone">Phone number:</string>
     <string name="no_phone">Unable to call supplier!</string>
     <string name="order">Order</string>
+    <string name="title">Welcome to the Inventory App!</string>
+    <string name="instructions">Now, you can use the menu button to Add New Product, don\'t forget to fill 9-digits long phone number for supplier!</string>
 </resources>
