@@ -99,6 +99,42 @@ public class EditorActivity extends AppCompatActivity implements
 
             }
         });
+        // Setup onClickListener to increase quantity when button is clicked.
+        findViewById(R.id.sell).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String currentQuantity = mQuantityEditText.getText().toString();
+                if (TextUtils.isEmpty(currentQuantity) || currentQuantity == null) {
+                    currentQuantity = String.valueOf(0);
+                }
+
+                int quantity = Integer.parseInt(currentQuantity);
+                // Avoid negative quantity.
+                if (quantity == 0) {
+                    Toast.makeText(getApplicationContext(), R.string.invalid_quantity, Toast.LENGTH_SHORT).show();
+                } else {
+                    quantity--;
+                    mQuantityEditText.setText(String.valueOf(quantity));
+                }
+
+            }
+        });
+
+        // Setup onClickListener to decrease quantity when button is clicked.
+        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String currentQuantity = mQuantityEditText.getText().toString();
+                if (TextUtils.isEmpty(currentQuantity) || currentQuantity == null) {
+                    currentQuantity = String.valueOf(0);
+                }
+                int quantity = Integer.parseInt(currentQuantity);
+                quantity++;
+                mQuantityEditText.setText(String.valueOf(quantity));
+
+            }
+        });
     }
 
 

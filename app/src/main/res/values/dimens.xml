@@ -3,4 +3,7 @@
     <dimen name="padding_small">8dp</dimen>
     <dimen name="order_dim">100dp</dimen>
     <dimen name="qnt_button">50dp</dimen>
+    <dimen name="qnt_button_edit">100dp</dimen>
+    <dimen name="margin_top">50dp</dimen>
+
 </resources>

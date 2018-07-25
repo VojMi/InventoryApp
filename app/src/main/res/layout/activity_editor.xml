@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".EditorActivity">
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="@dimen/margin_top"
         android:orientation="horizontal">
-
         <TextView
             style="@style/EditorUnitsStyle"
             android:text="@string/product_name" />
@@ -20,8 +20,8 @@
             android:id="@+id/edit_product_name"
             style="@style/EditorFieldStyle"
             android:inputType="textPersonName" />
-    </LinearLayout>
 
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -89,24 +89,58 @@
             android:inputType="phone" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/order_dim"
         android:orientation="horizontal">
 
+
         <Button
-            android:id="@+id/order"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/order_dim"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/padding_small"
+            android:id="@+id/add"
+            android:layout_width="@dimen/qnt_button_edit"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_small"
+            android:background="@drawable/round_corners"
             android:focusable="false"
-            android:text="@string/order"
+            android:text="@string/add"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
-    </LinearLayout>
 
+        <Button
+            android:id="@+id/sell"
+            android:layout_width="@dimen/qnt_button_edit"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_small"
+            android:background="@drawable/round_corners"
+            android:focusable="false"
+            android:gravity="center"
+            android:text="@string/sell"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/order"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/padding_small"
+        android:layout_weight="1"
+        android:background="@drawable/round_corners"
+        android:focusable="false"
+        android:text="@string/order"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 </LinearLayout>

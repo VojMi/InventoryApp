@@ -22,6 +22,10 @@ public class ProductProvider extends ContentProvider {
      */
     public static final String LOG_TAG = ProductProvider.class.getSimpleName();
     /*
+     * Magic number for 9 digit phone number.
+     * */
+    private static final int PHONE_LENGTH = 1000000;
+    /*
      * The code for URI matcher, products table.
      * */
     private static final int PRODUCTS = 1;
@@ -146,7 +150,7 @@ public class ProductProvider extends ContentProvider {
         // Check whether the phone number is valid (9 digits are expected).
         if (values.containsKey(ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER)) {
             String phone = values.getAsString(ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
-            if (TextUtils.isEmpty(phone) || Integer.valueOf(phone) < 100000000) {
+            if (TextUtils.isEmpty(phone) || Integer.valueOf(phone) < PHONE_LENGTH) {
                 throw new IllegalArgumentException("Product requires a supplier's phone");
             }
         }
@@ -256,7 +260,7 @@ public class ProductProvider extends ContentProvider {
         // Check whether the phone number is valid (9 digits are expected).
         if (values.containsKey(ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER)) {
             String phone = values.getAsString(ProductEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
-            if (TextUtils.isEmpty(phone) || Integer.valueOf(phone) < 100000000) {
+            if (TextUtils.isEmpty(phone) || Integer.valueOf(phone) < PHONE_LENGTH) {
                 throw new IllegalArgumentException("Product requires a supplier's phone");
             }
         }

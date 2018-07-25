@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Inventory app</string>
     <string name="title_new_product">New product</string>
-    <string name="title_edit_product">Edit product</string>
+    <string name="title_edit_product">Product detail</string>
     <string name="save_product">Save product</string>
     <string name="delete_product">Delete product</string>
     <string name="delete_all">Delete all products</string>

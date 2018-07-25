@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
@@ -30,10 +30,13 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/padding_small"
         android:layout_marginTop="@dimen/padding_small"
+        android:layout_marginRight="@dimen/padding_small"
         android:layout_toLeftOf="@+id/sell"
         android:focusable="false"
         android:text="@string/add"
         android:textAlignment="center"
+        android:background="@drawable/round_corners"
+
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@android:color/black"
         android:textStyle="bold" />
@@ -44,8 +47,11 @@
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/padding_small"
+
         android:layout_marginBottom="@dimen/padding_small"
         android:layout_marginTop="@dimen/padding_small"
+        android:background="@drawable/round_corners"
         android:focusable="false"
         android:gravity="end"
         android:text="@string/sell"
